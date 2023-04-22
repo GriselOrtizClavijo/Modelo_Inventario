@@ -12,29 +12,6 @@ const ListComponent = () => {
   const [products, setProducts] = useState([]);
  
   
-    const addInputText = (e) => {
-      let cleanValue = e.target.value.trimStart()
-            if (cleanValue.length <= 2) {
-              setValueError('No pueden ser menos de dos caracteres')
-            }
-            else {
-              setValueError('')
-            setValueInputText(cleanValue)}
-    
-    }
-
-    const addInputCate = (e) => {
-
-      if (valueInputCate.length >= 6) {
-        setValueError('No pueden ser mas de seis caracteres')
-      }
-      else {
-        setValueError('')
-      setValueInputCate(e.target.value)}
-
-      
-    }
-
     const addInputAmount = (e) => {
       setValueInputAmount(Number(e.target.value))
     }
@@ -43,25 +20,30 @@ const ListComponent = () => {
       setValueInputPrice(Number(e.target.value))
    }
 
-  
-    const AddProduct = (e) => {
-      e.preventDefault();
-      if(addInputText(e)) {
-      
-      const newProduct =
-        { name: valueInputText, 
-          category: valueInputCate,
-          price: Number(valueInputPrice), 
-          amount: Number(valueInputAmount)
-        }
-        
-        setProducts(prevState => [...prevState, newProduct]);
-        setValueInputText('');
-        setValueInputCate('');
-        setValueInputAmount(0);
-        setValueInputPrice(0);
+  const AddProduct = (e) => {
+    e.preventDefault();
+    if (valueInputText.length > 6) {
+      setValueError('No pueden ser mas de seis caracteres');
+      return;
+    } else if (valueInputCate.length > 6) {
+      setValueError('No pueden ser mas de seis caracteres');
+      return;
     }
-  }
+    
+    const newProduct = {
+      name: valueInputText, 
+      category: valueInputCate,
+      price: Number(valueInputPrice), 
+      amount: Number(valueInputAmount)
+    };
+  
+    setProducts(prevState => [...prevState, newProduct]);
+    setValueInputText('');
+    setValueInputCate('');
+    setValueInputAmount(0);
+    setValueInputPrice(0);
+    setValueError('');
+  };
 
   return (
    
@@ -85,17 +67,17 @@ const ListComponent = () => {
   </tbody>
 </table>
 
-    <form className='form'>
+    <form className='form'  onSubmit={(e) => AddProduct(e)}>
     <label>Ingrese el nombre del producto</label>
-    <input type='text' value={valueInputText} onChange={addInputText}/>
+    <input type='text' onChange={(e) => setValueInputText(e.target.value)} required/>
     <label>Ingrese la categoría del producto</label>
-    <input type='text'  value={valueInputCate} onChange={addInputCate} required/>
+    <input type='text'  onChange= {(e) => setValueInputCate(e.target.value)} required/> 
     <label>Ingrese la cantidad</label>
     <input type='number' value={valueInputAmount} onChange={addInputAmount} required/>
     <label>Ingrese el precio</label>
     <input type='number' value={valueInputPrice} onChange={addInputPrice} required/>
 
-    <button onClick={AddProduct}>Agregar producto</button>
+    <button >Agregar producto</button>
     <div>{valueError}</div>
     </form>
     </div>
